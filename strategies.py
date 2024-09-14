@@ -10,10 +10,12 @@ class Strategies:
     def __init__(
         self,
     ) -> None:
+        self.my_prev_move = None
         self.my_defects_in_a_row = 0
         self.opponent_defects_in_a_row = 0
 
     def reset_strategy(self) -> None:
+        self.my_prev_move = None
         self.my_defects_in_a_row = 0
         self.opponent_defects_in_a_row = 0
 
@@ -94,3 +96,25 @@ class Strategies:
         if prev_opponent_move == DEFECT and random.random() < 0.1:
             return COOPERATE
         return prev_opponent_move
+
+    def pavlov(self, prev_opponent_move: Optional[str]) -> str:
+        """Cooperates if the previous moves are the same and defect if they are not."""
+        if prev_opponent_move is None:
+            self.my_prev_move = COOPERATE
+            return COOPERATE
+        elif prev_opponent_move == self.my_prev_move:
+            return COOPERATE
+        else:
+            return DEFECT
+
+    def alternator(self, prev_opponent_move: Optional[str]) -> str:
+        """Alternates between cooperating and defecting."""
+        if prev_opponent_move is None:
+            self.my_prev_move = COOPERATE
+            return COOPERATE
+        elif self.my_prev_move == COOPERATE:
+            self.my_prev_move = DEFECT
+            return DEFECT
+        else:
+            self.my_prev_move = COOPERATE
+            return COOPERATE

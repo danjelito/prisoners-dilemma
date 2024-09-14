@@ -31,6 +31,8 @@ if __name__ == "__main__":
     generous_tit_for_tat = Player(
         strategies.generous_tit_for_tat, "generous_tit_for_tat"
     )
+    pavlov = Player(strategies.pavlov, "pavlov")
+    alternator = Player(strategies.alternator, "alternator")
 
     # create matches
     players = [
@@ -44,6 +46,8 @@ if __name__ == "__main__":
         two_tits_for_tat,
         grim_trigger,
         generous_tit_for_tat,
+        pavlov,
+        alternator,
     ]
     # get combinations of players (strategy vs another strategy)
     players_combination = list(itertools.combinations(players, 2))
@@ -85,6 +89,7 @@ if __name__ == "__main__":
                     data.append([strategy, opponent, score])
     for match in results_b:
         for strategy, doubled_score in match.items():
+            # the score of result_b is added twice because they are battling themselves in dict
             data.append([strategy, strategy, score // 2])
 
     df = pd.DataFrame(data, columns=["Strategy", "Opponent", "Score"])
