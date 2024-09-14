@@ -1,7 +1,5 @@
-import itertools
-import random
-from typing import Callable, Dict, List, Optional, Tuple
-from strategies import Strategies, COOPERATE, DEFECT
+from typing import Dict, Optional
+from strategies import COOPERATE, DEFECT
 from player import Player
 
 
@@ -24,6 +22,8 @@ class PrisonersDilemmaGame:
 
     def play(self) -> None:
 
+        self.moves = []
+
         # initiate player first move with None
         player_a_prev_move: Optional[str] = None
         player_b_prev_move: Optional[str] = None
@@ -44,6 +44,13 @@ class PrisonersDilemmaGame:
             # update each players prev move
             player_a_prev_move = player_a_move
             player_b_prev_move = player_b_move
+
+            self.moves.append(
+                {
+                    "player_a_move": player_a_move,
+                    "player_b_move": player_b_move,
+                }
+            )
 
         # after each game, reset first move
         player_a_prev_move = None
@@ -74,3 +81,6 @@ class PrisonersDilemmaGame:
         print(score)
         print(winner)
         print()
+
+    def get_moves(self) -> Dict[str, str]:
+        return self.moves

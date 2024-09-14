@@ -1,7 +1,4 @@
-import itertools
-import random
-from typing import Callable, Dict, List, Optional, Tuple
-from strategies import Strategies, COOPERATE, DEFECT
+from typing import Callable, Optional
 
 
 class Player:
