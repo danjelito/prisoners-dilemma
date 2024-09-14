@@ -1,11 +1,11 @@
 import itertools
 from pprint import pprint
-from game import PrisonersDilemmaGame
+from game import PrisonersDilemmaGame, play_game
 from player import Player
 from strategies import Strategies
 import pandas as pd
 
-N_ROUND = 200
+N_ROUND = 1000
 
 if __name__ == "__main__":
 
@@ -55,30 +55,9 @@ if __name__ == "__main__":
     players_self_match = [(player, player) for player in players]
 
     # play matches for strategy vs strategy
-    results_a = []
-    for player_a, player_b in players_combination:
-        # reset player coins and reset strategy before each game
-        player_a.reset_coins()
-        player_b.reset_coins()
-        strategies.reset_strategy()
-        # play game
-        game = PrisonersDilemmaGame(player_a, player_b, N_ROUND)
-        game.play()
-        game.print_score()
-        results_a.append(game.get_score())
-
+    results_a = play_game(players_combination, strategies, N_ROUND)
     # play matches for strategy vs itself
-    results_b = []
-    for player_a, player_b in players_self_match:
-        # reset player coins and reset strategy before each game
-        player_a.reset_coins()
-        player_b.reset_coins()
-        strategies.reset_strategy()
-        # play game
-        game = PrisonersDilemmaGame(player_a, player_b, N_ROUND)
-        game.play()
-        game.print_score()
-        results_b.append(game.get_score())
+    results_b = play_game(players_self_match, strategies, N_ROUND)
 
     # display result table
     data = []

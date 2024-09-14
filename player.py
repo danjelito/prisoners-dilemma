@@ -6,13 +6,13 @@ class Player:
     def __init__(self, strategy: Callable[[Optional[str]], str], name: str):
         self.strategy = strategy
         self.name = name
-        self.coins = 0
+        self.points = 0
 
-    def make_move(self, prev_opponent_move: Optional[str]) -> str:
-        return self.strategy(prev_opponent_move)
+    def make_move(self, opponent_prev_move: Optional[str]) -> str:
+        return self.strategy(opponent_prev_move)
 
-    def collect_coins(self, to_collect: int) -> None:
-        self.coins += to_collect
+    def collect_points(self, to_collect: int) -> None:
+        self.points += to_collect
 
-    def reset_coins(self) -> None:
-        self.coins = 0
+    def reset_points(self) -> None:
+        self.points = 0

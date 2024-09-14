@@ -1,6 +1,7 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from strategies import COOPERATE, DEFECT
 from player import Player
+from strategies import Strategies
 
 
 class PrisonersDilemmaGame:
@@ -10,7 +11,7 @@ class PrisonersDilemmaGame:
         self.player_b = player_b
         self.round = num_round
 
-    def get_coins(self, player_a_move: str, player_b_move: str):
+    def get_points(self, player_a_move: str, player_b_move: str):
         if player_a_move == player_b_move == COOPERATE:
             return 3, 3
         elif player_a_move == player_b_move == DEFECT:
@@ -35,11 +36,13 @@ class PrisonersDilemmaGame:
             player_b_move = self.player_b.make_move(player_a_prev_move)
 
             # get payoff
-            player_a_coin, player_b_coin = self.get_coins(player_a_move, player_b_move)
+            player_a_points, player_b_points = self.get_points(
+                player_a_move, player_b_move
+            )
 
-            # update each players total coin
-            self.player_a.collect_coins(player_a_coin)
-            self.player_b.collect_coins(player_b_coin)
+            # update each players total points
+            self.player_a.collect_points(player_a_points)
+            self.player_b.collect_points(player_b_points)
 
             # update each players prev move
             player_a_prev_move = player_a_move
@@ -58,22 +61,22 @@ class PrisonersDilemmaGame:
 
     def get_score(self) -> Dict[str, int]:
         return {
-            self.player_a.name: self.player_a.coins,
-            self.player_b.name: self.player_b.coins,
+            self.player_a.name: self.player_a.points,
+            self.player_b.name: self.player_b.points,
         }
 
     def print_score(self) -> None:
         # get winner
-        if self.player_a.coins > self.player_b.coins:
+        if self.player_a.points > self.player_b.points:
             winner = f"Winner: {self.player_a.name}"
-        elif self.player_a.coins < self.player_b.coins:
+        elif self.player_a.points < self.player_b.points:
             winner = f"Winner: {self.player_b.name}"
         else:
             winner = "It's a Draw!"
 
         # format the output
         heading = f"{self.round}-round Prisoner's Dilemma: {self.player_a.name} vs {self.player_b.name}"
-        score = f"Score: {self.player_a.name} ({self.player_a.coins}) vs {self.player_b.name} ({self.player_b.coins})"
+        score = f"Score: {self.player_a.name} ({self.player_a.points}) vs {self.player_b.name} ({self.player_b.points})"
 
         # print results
         print()
@@ -84,3 +87,20 @@ class PrisonersDilemmaGame:
 
     def get_moves(self) -> Dict[str, str]:
         return self.moves
+
+
+def play_game(
+    match: List[Player], strategies: Strategies, n_round: int
+) -> Dict[str, int]:
+    result = []
+    for player_a, player_b in match:
+        # reset player points and reset strategy before each game
+        player_a.reset_points()
+        player_b.reset_points()
+        strategies.reset_strategy()
+        # play game
+        game = PrisonersDilemmaGame(player_a, player_b, n_round)
+        game.play()
+        game.print_score()
+        result.append(game.get_score())
+    return result
